@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import styled from "styled-components";
+import Scoreboard from "./components/Scoreboard";
+import Arena from "./components/Arena";
+import Rules from "./components/Rules";
 
-function App() {
+const GameView = styled.div`
+  background: radial-gradient(#192648, #161c3e);
+  min-height: 100vh;
+  padding: 3em 1em;
+`;
+
+export const ScoreContext = React.createContext<React.Dispatch<
+  React.SetStateAction<number>
+> | null>(null);
+
+export default function App() {
+  const [score, setScore] = useState(() => {
+    const storedScore = localStorage.getItem("score");
+    return storedScore ? Number(storedScore) : 0;
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GameView>
+      <Scoreboard score={score} />
+      <ScoreContext.Provider value={setScore}>
+        <Arena />
+      </ScoreContext.Provider>
+      <Rules />
+    </GameView>
   );
 }
-
-export default App;
